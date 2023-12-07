@@ -1,6 +1,5 @@
 import { httpBatchLink } from '@trpc/client/links/httpBatchLink';
 import { loggerLink } from '@trpc/client/links/loggerLink';
-import { wsLink, createWSClient } from '@trpc/client/links/wsLink';
 import { createTRPCNext } from '@trpc/next';
 import type { inferProcedureOutput } from '@trpc/server';
 import { NextPageContext } from 'next';
@@ -13,7 +12,7 @@ import superjson from 'superjson';
 
 const { publicRuntimeConfig } = getConfig();
 
-const { APP_URL, WS_URL } = publicRuntimeConfig;
+const { APP_URL } = publicRuntimeConfig;
 
 function getEndingLink(ctx: NextPageContext | undefined) {
   if (typeof window === 'undefined') {
@@ -31,11 +30,8 @@ function getEndingLink(ctx: NextPageContext | undefined) {
       },
     });
   }
-  const client = createWSClient({
-    url: WS_URL,
-  });
-  return wsLink<AppRouter>({
-    client,
+  return httpBatchLink({
+    url: `${APP_URL}/api/trpc`,
   });
 }
 
@@ -71,7 +67,7 @@ export const trpc = createTRPCNext<AppRouter>({
       /**
        * @link https://tanstack.com/query/v4/docs/react/reference/QueryClient
        */
-      queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
+      // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
     };
   },
   /**

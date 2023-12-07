@@ -1,24 +1,22 @@
 import * as trpcNext from '@trpc/server/adapters/next';
-import { NodeHTTPCreateContextFnOptions } from '@trpc/server/adapters/node-http';
-import { IncomingMessage } from 'http';
-import { getSession } from 'next-auth/react';
-import ws from 'ws';
+import { jwtVerify } from 'jose';
+import { User } from '@workos-inc/node';
 
-/**
- * Creates context for an incoming request
- * @link https://trpc.io/docs/context
- */
+const secret = new Uint8Array(
+  Buffer.from(process.env.JWT_SECRET_KEY || '', 'base64'),
+);
 export const createContext = async (
-  opts:
-    | NodeHTTPCreateContextFnOptions<IncomingMessage, ws>
-    | trpcNext.CreateNextContextOptions,
+  opts: trpcNext.CreateNextContextOptions,
 ) => {
-  const session = await getSession(opts);
-
-  console.log('createContext for', session?.user?.name ?? 'unknown user');
-
+  const token = opts.req.cookies.token;
+  if (!token) {
+    return {
+      user: null,
+    };
+  }
+  const { payload } = await jwtVerify<User>(token, secret);
   return {
-    session,
+    user: (payload.user as User).id,
   };
 };
 

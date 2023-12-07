@@ -1,30 +1,35 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-datasource db {
-  provider = "postgres"
-  url      = env("DATABASE_URL")
-  // provider = "sqlite"
-  // url      = "file:./dev.db"
-}
-
 generator client {
   provider = "prisma-client-js"
 }
 
-enum PosterSource {
-  RAW
-  GITHUB
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
-model Post {
-  id     String       @id @default(uuid())
-  name   String
-  text   String
-  source PosterSource @default(RAW)
+model clients {
+  id       Int        @id @default(autoincrement())
+  name     String?    @db.VarChar(100)
+  type     Int?
+  userID   String     @db.VarChar(100)
+  messages messages[]
 
-  // To return `Date`s intact through the API we need to add data transformers
-  // https://trpc.io/docs/data-transformers
-  createdAt DateTime @unique @default(now())
-  updatedAt DateTime @unique @default(now())
+  @@index([userID], map: "clients_FK")
+  @@index([type], map: "clients_type_IDX")
+}
+
+model messages {
+  clientId Int
+  info     String   @db.VarChar(100)
+  value    Int
+  alert    Boolean
+  lng      Decimal  @db.Decimal(18, 9)
+  lat      Decimal  @db.Decimal(18, 9)
+  report   DateTime @db.Timestamp(0)
+  clients  clients  @relation(fields: [clientId], references: [id], onDelete: Cascade, map: "messages_FK")
+
+  @@id([clientId, info, value, alert, lng, lat, report])
+  @@index([clientId], map: "messages_clientId_IDX")
+  @@index([lng, lat], map: "messages_lng_IDX")
+  @@index([report], map: "messages_report_IDX")
 }
