@@ -1,7 +1,7 @@
 // import Image from 'next/image';
 import { Inter } from 'next/font/google';
-import { DeviceEditModal, DeviceList } from '../components/Device';
-import React, { useState } from 'react';
+import { DeviceEditModal, DeviceList } from '../components/device';
+import React from 'react';
 import { UserLoginModal } from '../components/user';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -13,7 +13,6 @@ export default function Home() {
       className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
     >
       <UserLoginModal />
-      <DeviceEditModal isCreate={true} deviceID={1} />
       <DeviceList managed={false} isLogin={true} />
     </main>
   );

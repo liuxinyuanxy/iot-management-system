@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { trpc } from '../utils/trpc';
 import { deviceType } from '../types';
 import type { AppRouterOutput } from '../types/client';
@@ -14,6 +13,8 @@ import {
   Select,
   useToast,
   CircularProgress,
+  Radio,
+  RadioGroup,
 } from '@chakra-ui/react';
 import {
   Modal,
@@ -37,9 +38,11 @@ import {
 export function DeviceEditModal({
   deviceID,
   isCreate,
+  setIsUpdated,
 }: {
   deviceID: number;
   isCreate: boolean;
+  setIsUpdated?: () => void;
 }) {
   const [name, setName] = useState<string>('');
   const [type, setType] = useState<number>(0);
@@ -71,7 +74,14 @@ export function DeviceEditModal({
         setType(deviceInfoQuery.data?.type ?? 0);
       }
     })();
-  }, [deviceID, deviceInfoQuery.isLoading, isCreate, toast]);
+  }, [
+    deviceID,
+    deviceInfoQuery.data,
+    deviceInfoQuery.error,
+    deviceInfoQuery.isLoading,
+    isCreate,
+    toast,
+  ]);
 
   const onSave = async () => {
     if (nameInvalid || typeInvalid) {
@@ -97,6 +107,11 @@ export function DeviceEditModal({
       });
     }
     onClose();
+    setIsUpdated?.();
+    if (isCreate) {
+      setName('');
+      setType(0);
+    }
   };
 
   return (
@@ -144,20 +159,22 @@ export function DeviceEditModal({
   );
 }
 
-export function DeviceList({
-  managed,
-  isLogin,
-}: {
-  managed: boolean;
-  isLogin: boolean;
-}) {
+export function DeviceList({ isLogin }: { isLogin: boolean }) {
+  const [managed, setManaged] = useState<boolean>(false);
   const toast = useToast();
-  const deviceListQuery = managed
-    ? trpc.iot.managedDevice.useQuery()
-    : trpc.iot.allDevice.useQuery();
+  const managedListQuery = trpc.iot.managedDevice.useQuery();
+  const allListQuery = trpc.iot.allDevice.useQuery();
   const [deviceList, setDeviceList] = useState<
     AppRouterOutput['iot']['managedDevice']
   >([]);
+  const deviceListQuery = managed ? managedListQuery : allListQuery;
+  const setIsUpdated = async () => {
+    await deviceListQuery.refetch();
+  };
+  const setValue = async (value: string) => {
+    setManaged(value === '2');
+    await deviceListQuery.refetch();
+  };
   useEffect(() => {
     if (!isLogin) {
       return;
@@ -177,32 +194,56 @@ export function DeviceList({
         setDeviceList(deviceListQuery.data ?? []);
       }
     })();
-  }, [managed, isLogin, deviceListQuery.isLoading, toast]);
+  }, [
+    managed,
+    isLogin,
+    deviceListQuery.isLoading,
+    toast,
+    deviceListQuery.data,
+    deviceListQuery.error,
+  ]);
   if (deviceListQuery.isLoading) {
     return <CircularProgress isIndeterminate />;
   }
   return (
-    <TableContainer>
-      <Table variant="striped" colorScheme="teal">
-        <Thead>
-          <Tr>
-            <Th>Name</Th>
-            <Th>Type</Th>
-            <Th>Actions</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {deviceList.map((device) => (
-            <Tr key={device.id}>
-              <Td>{device.name}</Td>
-              <Td>{deviceType[device.type ?? 0]}</Td>
-              <Td>
-                <DeviceEditModal deviceID={device.id} isCreate={false} />
-              </Td>
+    <>
+      <DeviceEditModal
+        isCreate={true}
+        deviceID={1}
+        setIsUpdated={setIsUpdated}
+      />
+      <RadioGroup onChange={setValue} defaultValue={managed ? '2' : '1'}>
+        <Stack direction="row">
+          <Radio value="1">All Device</Radio>
+          <Radio value="2">Managed Device</Radio>
+        </Stack>
+      </RadioGroup>
+      <TableContainer>
+        <Table variant="striped" colorScheme="teal">
+          <Thead>
+            <Tr>
+              <Th>Name</Th>
+              <Th>Type</Th>
+              <Th>Actions</Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
-    </TableContainer>
+          </Thead>
+          <Tbody>
+            {deviceList.map((device) => (
+              <Tr key={device.id}>
+                <Td>{device.name}</Td>
+                <Td>{deviceType[device.type ?? 0]}</Td>
+                <Td>
+                  <DeviceEditModal
+                    deviceID={device.id}
+                    isCreate={false}
+                    setIsUpdated={setIsUpdated}
+                  />
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+    </>
   );
 }
