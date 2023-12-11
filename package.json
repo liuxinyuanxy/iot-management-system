@@ -6,7 +6,7 @@
     "node": "^18.15.0"
   },
   "scripts": {
-    "prebuild": "prisma generate && prisma migrate deploy",
+    "prebuild": "prisma generate",
     "build:1-next": "cross-env NODE_ENV=production next build",
     "build:2-server": "tsc --project tsconfig.server.json",
     "build": "run-s build:*",
