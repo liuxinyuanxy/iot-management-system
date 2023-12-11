@@ -11,7 +11,7 @@ if (!clientId) {
 }
 const redirectUri =
   process.env.NODE_ENV === 'production'
-    ? 'https://chiral-phonon-material-database.vercel.app/api/authCallback'
+    ? 'https://iot-management-system.vercel.app/api/authCallback'
     : 'http://localhost:3000/api/authCallback';
 
 export const iotRouter = router({
