@@ -14,10 +14,16 @@ export const createContext = async (
       user: null,
     };
   }
-  const { payload } = await jwtVerify<User>(token, secret);
-  return {
-    user: (payload.user as User).id,
-  };
+  try {
+    const { payload } = await jwtVerify<User>(token, secret);
+    return {
+      user: (payload.user as User).id,
+    };
+  } catch (error) {
+    return {
+      user: null,
+    };
+  }
 };
 
 export type Context = Awaited<ReturnType<typeof createContext>>;

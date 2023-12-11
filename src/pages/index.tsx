@@ -1,20 +1,38 @@
 // import Image from 'next/image';
 import { Inter } from 'next/font/google';
-import { DeviceEditModal, DeviceList } from '../components/device';
+import { DeviceList } from '../components/device';
 import React from 'react';
 import { UserLoginModal } from '../components/user';
+import { Button, Heading, useColorMode } from '@chakra-ui/react';
 
 const inter = Inter({ subsets: ['latin'] });
+
+function ColorChange() {
+  const { colorMode, toggleColorMode } = useColorMode();
+  return (
+    <header>
+      <Button onClick={toggleColorMode}>
+        Toggle {colorMode === 'light' ? 'Dark' : 'Light'}
+      </Button>
+    </header>
+  );
+}
 
 export default function Home() {
   // const [isLogin, setIsLogin] = useState<boolean>(false);
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <UserLoginModal />
-      <DeviceList managed={false} isLogin={true} />
-    </main>
+    <>
+      <header className="flex justify-between w-full px-24 py-8">
+        <ColorChange />
+        <Heading> IoT Device Management System</Heading>
+        <UserLoginModal />
+      </header>
+      <main
+        className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
+      >
+        <DeviceList isLogin={true} />
+      </main>
+    </>
   );
 }
 

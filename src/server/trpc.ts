@@ -50,7 +50,7 @@ const isAuthed = middleware(({ next, ctx }) => {
   const user = ctx.user;
 
   if (!user) {
-    throw new TRPCError({ code: 'UNAUTHORIZED' });
+    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Please log in' });
   }
 
   return next({

@@ -135,14 +135,18 @@ export function DeviceEditModal({
                   placeholder="Select device type"
                   onChange={(e) => setType(parseInt(e.target.value))}
                 >
-                  {Object.keys(deviceType).map((key) => (
-                    <option
-                      key={key + deviceID}
-                      value={Object(deviceType)[key]}
-                    >
-                      {key}
-                    </option>
-                  ))}
+                  <option value="1" key="1">
+                    {deviceType[1]}
+                  </option>
+                  <option value="2" key="2">
+                    {deviceType[2]}
+                  </option>
+                  <option value="3" key="3">
+                    {deviceType[3]}
+                  </option>
+                  <option value="4" key="4">
+                    {deviceType[4]}
+                  </option>
                 </Select>
               </FormControl>
             </Stack>
@@ -233,11 +237,18 @@ export function DeviceList({ isLogin }: { isLogin: boolean }) {
                 <Td>{device.name}</Td>
                 <Td>{deviceType[device.type ?? 0]}</Td>
                 <Td>
-                  <DeviceEditModal
-                    deviceID={device.id}
-                    isCreate={false}
-                    setIsUpdated={setIsUpdated}
-                  />
+                  {managed ? (
+                    <DeviceEditModal
+                      deviceID={device.id}
+                      isCreate={false}
+                      setIsUpdated={setIsUpdated}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                  <a href={`/path/${device.id}`}>
+                    <Button>View Path</Button>
+                  </a>
                 </Td>
               </Tr>
             ))}

@@ -2,7 +2,7 @@
 # previewsExpireAfterDays: 7 # automatically delete the environment after the specified number of days of inactivity
 services:
   - type: web
-    name: trpc-websockets
+    name: trpc
     env: node
     plan: free
     # NODE_ENV is development here in order for pnpm to install dev deps
@@ -16,14 +16,14 @@ services:
       - key: NODE_ENV
         value: production
 
-      - key: DATABASE_URL
+      - key: POSTGRES_URL
         fromDatabase:
-          name: trpc-websockets-db
+          name: trpc-db
           property: connectionString
 
-      - fromGroup: trpc-websockets
+      - fromGroup: trpc
 
 databases:
-  - name: trpc-websockets-db
+  - name: trpc-db
     plan: starter
     # plan: free
