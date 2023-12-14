@@ -56,6 +56,9 @@ function Messages(input: { data: AppRouterOutput['iot']['deviceMessages'] }) {
             <p>lng: {message?.lng.toString()}</p>
             <p>lat: {message?.lat.toString()}</p>
             <p>alert: {message?.alert}</p>
+            <p>info: {message?.info}</p>
+            <p>value: {message?.value}</p>
+            <p>clientId: {message?.clientId}</p>
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
