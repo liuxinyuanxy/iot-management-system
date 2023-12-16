@@ -16,6 +16,15 @@ import type { AppRouterInput, AppRouterOutput } from '../types/client';
 import { trpc } from '../utils/trpc';
 import { CircularProgress, useToast } from '@chakra-ui/react';
 
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+} from '@chakra-ui/react';
 function Messages(input: { data: AppRouterOutput['iot']['deviceMessages'] }) {
   const messages = Array.from(input.data);
   const [message, setMessage] =
@@ -58,7 +67,6 @@ function Messages(input: { data: AppRouterOutput['iot']['deviceMessages'] }) {
             <p>alert: {message?.alert}</p>
             <p>info: {message?.info}</p>
             <p>value: {message?.value}</p>
-            <p>clientId: {message?.clientId}</p>
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
@@ -134,12 +142,44 @@ export function Path(input: AppRouterInput['iot']['deviceMessages']) {
     return <CircularProgress isIndeterminate />;
   }
   return (
-    <div style={{ width: '100%', height: '300px', overflow: 'auto' }}>
-      <APILoader akay="ik7tF5kocLWMEV5x2IdkWo41MbFVv0Kf">
-        <Provider>
-          <Messages data={messages} />
-        </Provider>
-      </APILoader>
-    </div>
+    <>
+      <>
+        <TableContainer>
+          <Table className="table-auto">
+            <Thead>
+              <Tr>
+                <Th>reportTime</Th>
+                <Th>lng</Th>
+                <Th>lat</Th>
+                <Th>alert</Th>
+                <Th>info</Th>
+                <Th>value</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {messages.map((message) => {
+                return (
+                  <Tr key={message.report.toString()}>
+                    <Td>{message.report.toString()}</Td>
+                    <Td>{message.lng.toString()}</Td>
+                    <Td>{message.lat.toString()}</Td>
+                    <Td>{message.alert.toString()}</Td>
+                    <Td>{message.info.toString()}</Td>
+                    <Td>{message.value.toString()}</Td>
+                  </Tr>
+                );
+              })}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      </>
+      <div style={{ width: '100%', height: '300px', overflow: 'auto' }}>
+        <APILoader akay="ik7tF5kocLWMEV5x2IdkWo41MbFVv0Kf">
+          <Provider>
+            <Messages data={messages} />
+          </Provider>
+        </APILoader>
+      </div>
+    </>
   );
 }
