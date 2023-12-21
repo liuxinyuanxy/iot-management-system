@@ -180,9 +180,6 @@ export function DeviceList({ isLogin }: { isLogin: boolean }) {
     await deviceListQuery.refetch();
   };
   useEffect(() => {
-    if (!isLogin) {
-      return;
-    }
     (async () => {
       if (!deviceListQuery.isLoading) {
         if (deviceListQuery.error) {
@@ -211,15 +208,17 @@ export function DeviceList({ isLogin }: { isLogin: boolean }) {
   }
   return (
     <>
-      <DeviceEditModal
-        isCreate={true}
-        deviceID={1}
-        setIsUpdated={setIsUpdated}
-      />
+      {isLogin && (
+        <DeviceEditModal
+          isCreate={true}
+          deviceID={1}
+          setIsUpdated={setIsUpdated}
+        />
+      )}
       <RadioGroup onChange={setValue} defaultValue={managed ? '2' : '1'}>
         <Stack direction="row">
           <Radio value="1">All Device</Radio>
-          <Radio value="2">Managed Device</Radio>
+          {isLogin && <Radio value="2">Managed Device</Radio>}
         </Stack>
       </RadioGroup>
       <TableContainer>

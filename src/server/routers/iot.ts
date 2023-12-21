@@ -115,4 +115,10 @@ export const iotRouter = router({
         },
       });
     }),
+  ping: publicProcedure.query(async () => {
+    return 'pong';
+  }),
+  pingAuthed: authedProcedure.query(async () => {
+    return 'pong';
+  }),
 });

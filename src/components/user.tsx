@@ -2,7 +2,23 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { trpc } from '../utils/trpc';
 import { Button, useToast } from '@chakra-ui/react';
-export function UserLoginModal() {
+
+function UserLogout() {
+  return (
+    <Button
+      onClick={async () => {
+        // fetch /api/logout
+        await fetch('/api/signout');
+        // refresh the page
+        window.location.reload();
+      }}
+    >
+      Logout
+    </Button>
+  );
+}
+
+export function UserLogin() {
   const [url, setUrl] = useState<string>('');
   const toast = useToast();
   const urlGet = trpc.iot.loginURL.useQuery();
@@ -29,4 +45,8 @@ export function UserLoginModal() {
       </a>
     </>
   );
+}
+
+export function UserLoginModal({ isLogin }: { isLogin: boolean }) {
+  return <>{isLogin ? <UserLogout /> : <UserLogin />}</>;
 }
