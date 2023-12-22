@@ -58,22 +58,20 @@ export function DeviceEditModal({
     if (isCreate) {
       return;
     }
-    (async () => {
-      if (!deviceInfoQuery.isLoading) {
-        if (deviceInfoQuery.error) {
-          toast({
-            title: 'Error',
-            description: deviceInfoQuery.error.message,
-            status: 'error',
-            duration: 3000,
-            isClosable: true,
-          });
-          return;
-        }
-        setName(deviceInfoQuery.data?.name ?? '');
-        setType(deviceInfoQuery.data?.type ?? 0);
+    if (!deviceInfoQuery.isLoading) {
+      if (deviceInfoQuery.error) {
+        toast({
+          title: 'Error',
+          description: deviceInfoQuery.error.message,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+        return;
       }
-    })();
+      setName(deviceInfoQuery.data?.name ?? '');
+      setType(deviceInfoQuery.data?.type ?? 0);
+    }
   }, [
     deviceID,
     deviceInfoQuery.data,
@@ -180,21 +178,19 @@ export function DeviceList({ isLogin }: { isLogin: boolean }) {
     await deviceListQuery.refetch();
   };
   useEffect(() => {
-    (async () => {
-      if (!deviceListQuery.isLoading) {
-        if (deviceListQuery.error) {
-          toast({
-            title: 'Error',
-            description: deviceListQuery.error.message,
-            status: 'error',
-            duration: 3000,
-            isClosable: true,
-          });
-          return;
-        }
-        setDeviceList(deviceListQuery.data ?? []);
+    if (!deviceListQuery.isLoading) {
+      if (deviceListQuery.error) {
+        toast({
+          title: 'Error',
+          description: deviceListQuery.error.message,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+        return;
       }
-    })();
+      setDeviceList(deviceListQuery.data ?? []);
+    }
   }, [
     managed,
     isLogin,

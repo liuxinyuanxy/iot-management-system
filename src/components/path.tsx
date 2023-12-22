@@ -120,23 +120,21 @@ export function Path(input: AppRouterInput['iot']['deviceMessages']) {
   const messagesQuery = trpc.iot.deviceMessages.useQuery(input);
 
   useEffect(() => {
-    (async () => {
-      if (!messagesQuery.isLoading) {
-        if (messagesQuery.error) {
-          toast({
-            title: 'Error',
-            description: messagesQuery.error.message,
-            status: 'error',
-            duration: 3000,
-            isClosable: true,
-          });
-          return;
-        }
-        console.log('get data of messages');
-        console.log(messagesQuery.data);
-        setMessages(messagesQuery.data ?? []);
+    if (!messagesQuery.isLoading) {
+      if (messagesQuery.error) {
+        toast({
+          title: 'Error',
+          description: messagesQuery.error.message,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+        return;
       }
-    })();
+      console.log('get data of messages');
+      console.log(messagesQuery.data);
+      setMessages(messagesQuery.data ?? []);
+    }
   }, [messagesQuery.data, messagesQuery.error, messagesQuery.isLoading, toast]);
   if (messagesQuery.isLoading) {
     return <CircularProgress isIndeterminate />;
