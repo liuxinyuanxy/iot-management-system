@@ -1,9 +1,9 @@
-const mqttServer =  process.env.MQTT_SERVER || 'tcp://localhost:1883';
+const mqttServer =  process.env.MQTT_SERVER || 'tcp://broker.hivemq.com:1883';
 const mqtt = require("mqtt");
 const client = mqtt.connect(mqttServer);
 const PrismaClient = require('@prisma/client').PrismaClient
 const prisma = new PrismaClient()
-
+console.log('try connect to ' + mqttServer)
 client.on('connect', () => {
   client.subscribe('iotHydra', (err) => {
     if (err) {
@@ -37,5 +37,7 @@ client.on('message', (topic, message) => {
     }
   }).then((result) => {
     console.log('Message saved to DB');
+  }).catch((err) => {
+    console.log(err);
   });
 });
