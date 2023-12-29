@@ -18,6 +18,9 @@ export function MqttButton() {
     }
   }, [toast, mqttStartQuery.error, mqttStartQuery.isLoading]);
   const onclick = async () => {
+    if (mqttStartQuery.isLoading) {
+      return;
+    }
     await mqttStartQuery.refetch();
   };
   return (
