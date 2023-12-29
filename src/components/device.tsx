@@ -223,6 +223,7 @@ export function DeviceList({ isLogin }: { isLogin: boolean }) {
             <Tr>
               <Th>Name</Th>
               <Th>Type</Th>
+              <Th>DeviceID</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
@@ -231,6 +232,7 @@ export function DeviceList({ isLogin }: { isLogin: boolean }) {
               <Tr key={device.id}>
                 <Td>{device.name}</Td>
                 <Td>{deviceType[device.type ?? 0]}</Td>
+                <Td>{device.id}</Td>
                 <Td>
                   {managed ? (
                     <DeviceEditModal

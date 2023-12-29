@@ -6,7 +6,6 @@
     "node": "^18.15.0"
   },
   "scripts": {
-    "mqtt": "node mqtt.js",
     "prebuild": "prisma generate",
     "build:1-next": "cross-env NODE_ENV=production next build",
     "build:2-server": "tsc --project tsconfig.server.json",

@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { authedProcedure, publicProcedure, router } from '../trpc';
 
 import { WorkOS } from '@workos-inc/node';
+import mqtt from 'mqtt';
 
 const workos = new WorkOS(process.env.WORKOS_API_KEY);
 const clientId = process.env.WORKOS_CLIENT_ID;
@@ -120,5 +121,53 @@ export const iotRouter = router({
   }),
   pingAuthed: authedProcedure.query(async () => {
     return 'pong';
+  }),
+  mqttStart: publicProcedure.query(async () => {
+    const mqttServer =
+      process.env.MQTT_SERVER || 'tcp://broker.hivemq.com:1883';
+    const client = mqtt.connect(mqttServer);
+    console.log('try connect to ' + mqttServer);
+    client.on('connect', () => {
+      client.subscribe('iotHydra', (err) => {
+        if (err) {
+          console.error(err);
+        }
+      });
+    });
+
+    console.log('MQTT client connected');
+
+    client.on('message', (topic, message) => {
+      console.log('Received from topic: ' + topic + ' - ' + message.toString());
+      const data = JSON.parse(message.toString());
+      // eslint-disable-next-line prefer-const
+      let { alert, clientId, info, lat, lng, timestamp, value } = data;
+      alert = alert === 1;
+      clientId = parseInt(clientId.slice(-4));
+      const report = new Date(timestamp);
+      prisma.clients
+        .update({
+          where: { id: clientId },
+          data: {
+            messages: {
+              create: {
+                alert,
+                info,
+                lat,
+                lng,
+                report,
+                value,
+              },
+            },
+          },
+        })
+        .then(() => {
+          console.log('Message saved to DB');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+    return 'start';
   }),
 });

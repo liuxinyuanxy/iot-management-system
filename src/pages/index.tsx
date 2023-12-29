@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 import { UserLoginModal } from '../components/user';
 import { Button, Heading, useColorMode } from '@chakra-ui/react';
 import { trpc } from '../utils/trpc';
+import { MqttButton } from '../components/mqtt';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -41,6 +42,7 @@ export default function Home() {
       <main
         className={`flex flex-col items-center justify-between p-24 ${inter.className}`}
       >
+        <MqttButton />
         <DeviceList isLogin={isLogin} />
       </main>
     </>
