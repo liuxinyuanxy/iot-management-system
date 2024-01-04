@@ -2,6 +2,7 @@ import { Inter } from 'next/font/google';
 import { Path } from '../../components/path';
 import React from 'react';
 import { useRouter } from 'next/router';
+import { Tooltip } from '@chakra-ui/react';
 
 import {
   Card,
@@ -31,9 +32,9 @@ export default function Home() {
   const deviceID = Number(device);
   return (
     <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
+      className={`flex min-h-screen flex-col items-center justify-between p-6 ${inter.className}`}
     >
-      <div style={{ width: '80%', overflow: 'auto' }}>
+      <div style={{ width: '100%', overflow: 'auto' }}>
         <Card size={'lg'}>
           <CardHeader>
             <Heading size="md">Client Path Info</Heading>
@@ -42,10 +43,16 @@ export default function Home() {
           <CardBody>
             <Stack divider={<StackDivider />} spacing="4">
               <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Option (leave the option alone if you do not want to filter it)
-                </Heading>
-
+                <Tooltip
+                  placement="top-start"
+                  label={
+                    'leave the option alone if you do not want to filter it'
+                  }
+                >
+                  <Heading size="xs" textTransform="uppercase">
+                    Option
+                  </Heading>
+                </Tooltip>
                 <Box>
                   <Text>Value</Text>
                   <NumberInput mx="auto">

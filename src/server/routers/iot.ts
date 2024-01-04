@@ -7,13 +7,11 @@ import mqtt from 'mqtt';
 
 const workos = new WorkOS(process.env.WORKOS_API_KEY);
 const clientId = process.env.WORKOS_CLIENT_ID;
+const appurl = process.env.APP_URL;
 if (!clientId) {
   throw new Error('clientId is undefined');
 }
-const redirectUri =
-  process.env.NODE_ENV === 'production'
-    ? 'https://iot-management-system.vercel.app/api/authCallback'
-    : 'http://localhost:3000/api/authCallback';
+const redirectUri = appurl + '/api/authCallback';
 
 export const iotRouter = router({
   loginURL: publicProcedure.query(async () => {
@@ -121,6 +119,27 @@ export const iotRouter = router({
   }),
   pingAuthed: authedProcedure.query(async () => {
     return 'pong';
+  }),
+  staticsDeviceNumber: publicProcedure.query(async () => {
+    return prisma.clients.count();
+  }),
+  staticsDeviceOnline: publicProcedure.query(async () => {
+    // who has message that report in 30 mins
+    const now = new Date();
+    return prisma.clients.count({
+      where: {
+        messages: {
+          some: {
+            report: {
+              gte: new Date(now.getTime() - 30 * 60 * 1000),
+            },
+          },
+        },
+      },
+    });
+  }),
+  staticsDataBytes: publicProcedure.query(async () => {
+    return prisma.messages.count();
   }),
   mqttStart: publicProcedure.query(async () => {
     const mqttServer =

@@ -34,13 +34,13 @@ export default function Home() {
   }, [isLoginReq.error, isLoginReq.isLoading]);
   return (
     <>
-      <header className="flex justify-between w-full px-24 py-8">
+      <header className="flex justify-between w-full px-12 py-8">
         <ColorChange />
-        <Heading> IoT Device Management System</Heading>
+        <Heading> IoT </Heading>
         <UserLoginModal isLogin={isLogin} />
       </header>
       <main
-        className={`flex flex-col items-center justify-between p-24 ${inter.className}`}
+        className={`flex flex-col items-center justify-between px-12 py-12 ${inter.className}`}
       >
         <MqttButton />
         <DeviceList isLogin={isLogin} />

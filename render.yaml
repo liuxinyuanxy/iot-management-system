@@ -16,7 +16,7 @@ services:
       - key: NODE_ENV
         value: production
 
-      - key: POSTGRES_URL
+      - key: DATABASE_URL
         fromDatabase:
           name: trpc-db
           property: connectionString

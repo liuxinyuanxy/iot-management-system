@@ -24,8 +24,8 @@ export function MqttButton() {
     await mqttStartQuery.refetch();
   };
   return (
-    <>
+    <div className={'py-11'}>
       <Button onClick={onclick}>Refresh MQTT server</Button>
-    </>
+    </div>
   );
 }

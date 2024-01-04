@@ -1,6 +1,12 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Map, APILoader, Provider, Marker } from '@uiw/react-baidu-map';
+import {
+  Map,
+  APILoader,
+  Provider,
+  Marker,
+  Polyline,
+} from '@uiw/react-baidu-map';
 import {
   Modal,
   ModalOverlay,
@@ -48,9 +54,17 @@ function Messages(input: { data: AppRouterOutput['iot']['deviceMessages'] }) {
     center_x /= messages.length;
     center_y /= messages.length;
   }
-  const icon = new BMap.Icon(
-    'http://developer.baidu.com/map/jsdemo/img/fox.gif',
-    new BMap.Size(200, 200),
+  // const icon = new BMap.Icon(
+  //   'http://developer.baidu.com/map/jsdemo/img/fox.gif',
+  //   new BMap.Size(200, 200),
+  // );
+  const greenIcon = new BMap.Icon(
+    'https://s2.loli.net/2024/01/05/mV21vsXgMyI4jpL.png',
+    new BMap.Size(21, 28),
+  );
+  const redIcon = new BMap.Icon(
+    'https://s2.loli.net/2024/01/05/1hauqMnJHbvAFER.png',
+    new BMap.Size(21, 28),
   );
   console.log(messages);
   return (
@@ -64,7 +78,7 @@ function Messages(input: { data: AppRouterOutput['iot']['deviceMessages'] }) {
             <p>reportTime: {message?.report.toString()}</p>
             <p>lng: {message?.lng.toString()}</p>
             <p>lat: {message?.lat.toString()}</p>
-            <p>alert: {message?.alert}</p>
+            <p>alert: {message?.alert ? 'True' : 'False'}</p>
             <p>info: {message?.info}</p>
             <p>value: {message?.value}</p>
           </ModalBody>
@@ -90,6 +104,14 @@ function Messages(input: { data: AppRouterOutput['iot']['deviceMessages'] }) {
         zoom={13}
         style={{ height: 350 }}
       >
+        <Polyline
+          path={messages.map((message) => {
+            return {
+              lng: Number(message.lng),
+              lat: Number(message.lat),
+            };
+          })}
+        />
         {messages.map((message) => {
           return (
             <Marker
@@ -98,7 +120,7 @@ function Messages(input: { data: AppRouterOutput['iot']['deviceMessages'] }) {
                 lng: Number(message.lng),
                 lat: Number(message.lat),
               }}
-              icon={icon}
+              icon={message.alert ? redIcon : greenIcon}
               // type={message.alert ? 'loc_red' : 'loc_blue'}
               onClick={() => {
                 setMessage(message);
@@ -141,6 +163,13 @@ export function Path(input: AppRouterInput['iot']['deviceMessages']) {
   }
   return (
     <>
+      <div style={{ width: '100%', height: '300px', overflow: 'auto' }}>
+        <APILoader akay="ik7tF5kocLWMEV5x2IdkWo41MbFVv0Kf">
+          <Provider>
+            <Messages data={messages} />
+          </Provider>
+        </APILoader>
+      </div>
       <>
         <TableContainer>
           <Table className="table-auto">
@@ -171,13 +200,6 @@ export function Path(input: AppRouterInput['iot']['deviceMessages']) {
           </Table>
         </TableContainer>
       </>
-      <div style={{ width: '100%', height: '300px', overflow: 'auto' }}>
-        <APILoader akay="ik7tF5kocLWMEV5x2IdkWo41MbFVv0Kf">
-          <Provider>
-            <Messages data={messages} />
-          </Provider>
-        </APILoader>
-      </div>
     </>
   );
 }
