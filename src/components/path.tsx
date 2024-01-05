@@ -54,10 +54,6 @@ function Messages(input: { data: AppRouterOutput['iot']['deviceMessages'] }) {
     center_x /= messages.length;
     center_y /= messages.length;
   }
-  // sort messages by report time
-  messages.sort((a, b) => {
-    return a.report.getTime() - b.report.getTime();
-  });
   const last_one = messages[messages.length - 1];
   // const icon = new BMap.Icon(
   //   'http://developer.baidu.com/map/jsdemo/img/fox.gif',
@@ -175,6 +171,10 @@ export function Path(input: AppRouterInput['iot']['deviceMessages']) {
   if (messagesQuery.isLoading) {
     return <CircularProgress isIndeterminate />;
   }
+  // sort messages by report time
+  messages.sort((a, b) => {
+    return a.report.getTime() - b.report.getTime();
+  });
   return (
     <>
       <div style={{ width: '100%', height: '300px', overflow: 'auto' }}>
