@@ -7,7 +7,6 @@ import { AllDeviceChart } from '../components/statics';
 import { Button, Heading, useColorMode } from '@chakra-ui/react';
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import { trpc } from '../utils/trpc';
-import { MqttButton } from '../components/mqtt';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -42,16 +41,15 @@ export default function Home() {
         <UserLoginModal isLogin={isLogin} />
       </header>
       <main
-        className={`flex flex-col items-center justify-between px-12 py-12 ${inter.className}`}
+        className={`flex flex-col justify-between px-12 py-12 ${inter.className}`}
       >
-        <Tabs variant="soft-rounded" colorScheme="green">
+        <Tabs>
           <TabList>
             <Tab> Device management </Tab>
             <Tab> Statics </Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
-              <MqttButton />
               <DeviceList isLogin={isLogin} />
             </TabPanel>
             <TabPanel>
