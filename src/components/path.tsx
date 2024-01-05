@@ -54,6 +54,11 @@ function Messages(input: { data: AppRouterOutput['iot']['deviceMessages'] }) {
     center_x /= messages.length;
     center_y /= messages.length;
   }
+  // sort messages by report time
+  messages.sort((a, b) => {
+    return a.report.getTime() - b.report.getTime();
+  });
+  const last_one = messages[messages.length - 1];
   // const icon = new BMap.Icon(
   //   'http://developer.baidu.com/map/jsdemo/img/fox.gif',
   //   new BMap.Size(200, 200),
@@ -66,7 +71,10 @@ function Messages(input: { data: AppRouterOutput['iot']['deviceMessages'] }) {
     'https://s2.loli.net/2024/01/05/1hauqMnJHbvAFER.png',
     new BMap.Size(21, 28),
   );
-  console.log(messages);
+  const currentIcon = new BMap.Icon(
+    'https://s2.loli.net/2024/01/05/3d5wbLqC2NYcO8f.png',
+    new BMap.Size(31, 42),
+  );
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -101,7 +109,7 @@ function Messages(input: { data: AppRouterOutput['iot']['deviceMessages'] }) {
           lng: center_x,
           lat: center_y,
         }}
-        zoom={13}
+        zoom={10}
         style={{ height: 350 }}
       >
         <Polyline
@@ -120,7 +128,13 @@ function Messages(input: { data: AppRouterOutput['iot']['deviceMessages'] }) {
                 lng: Number(message.lng),
                 lat: Number(message.lat),
               }}
-              icon={message.alert ? redIcon : greenIcon}
+              icon={
+                message == last_one
+                  ? currentIcon
+                  : message.alert
+                  ? redIcon
+                  : greenIcon
+              }
               // type={message.alert ? 'loc_red' : 'loc_blue'}
               onClick={() => {
                 setMessage(message);

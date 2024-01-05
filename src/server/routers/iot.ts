@@ -124,14 +124,14 @@ export const iotRouter = router({
     return prisma.clients.count();
   }),
   staticsDeviceOnline: publicProcedure.query(async () => {
-    // who has message that report in 30 mins
+    // who has message that report in 1 min
     const now = new Date();
     return prisma.clients.count({
       where: {
         messages: {
           some: {
             report: {
-              gte: new Date(now.getTime() - 30 * 60 * 1000),
+              gte: new Date(now.getTime() - 60 * 1000),
             },
           },
         },

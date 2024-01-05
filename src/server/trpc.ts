@@ -10,19 +10,23 @@
 
 import { Context } from './context';
 import { initTRPC, TRPCError } from '@trpc/server';
+import { OperationMeta } from 'openapi-trpc';
 import superjson from 'superjson';
-const t = initTRPC.context<Context>().create({
-  /**
-   * @see https://trpc.io/docs/v10/data-transformers
-   */
-  transformer: superjson,
-  /**
-   * @see https://trpc.io/docs/v10/error-formatting
-   */
-  errorFormatter({ shape }) {
-    return shape;
-  },
-});
+const t = initTRPC
+  .meta<OperationMeta>()
+  .context<Context>()
+  .create({
+    /**
+     * @see https://trpc.io/docs/v10/data-transformers
+     */
+    transformer: superjson,
+    /**
+     * @see https://trpc.io/docs/v10/error-formatting
+     */
+    errorFormatter({ shape }) {
+      return shape;
+    },
+  });
 
 /**
  * Create a router

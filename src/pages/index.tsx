@@ -3,7 +3,9 @@ import { Inter } from 'next/font/google';
 import { DeviceList } from '../components/device';
 import React, { useEffect } from 'react';
 import { UserLoginModal } from '../components/user';
+import { AllDeviceChart } from '../components/statics';
 import { Button, Heading, useColorMode } from '@chakra-ui/react';
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import { trpc } from '../utils/trpc';
 import { MqttButton } from '../components/mqtt';
 
@@ -42,8 +44,21 @@ export default function Home() {
       <main
         className={`flex flex-col items-center justify-between px-12 py-12 ${inter.className}`}
       >
-        <MqttButton />
-        <DeviceList isLogin={isLogin} />
+        <Tabs variant="soft-rounded" colorScheme="green">
+          <TabList>
+            <Tab> Device management </Tab>
+            <Tab> Statics </Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <MqttButton />
+              <DeviceList isLogin={isLogin} />
+            </TabPanel>
+            <TabPanel>
+              <AllDeviceChart />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </main>
     </>
   );
