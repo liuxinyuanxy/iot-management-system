@@ -7,7 +7,6 @@ import { AllDeviceChart } from '../components/statics';
 import { Button, Heading, useColorMode } from '@chakra-ui/react';
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import { trpc } from '../utils/trpc';
-import { MqttButton } from '../components/mqtt';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -51,7 +50,6 @@ export default function Home() {
           </TabList>
           <TabPanels>
             <TabPanel>
-              <MqttButton />
               <DeviceList isLogin={isLogin} />
             </TabPanel>
             <TabPanel>

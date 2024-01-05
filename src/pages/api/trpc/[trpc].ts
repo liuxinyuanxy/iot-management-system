@@ -4,7 +4,14 @@
 import * as trpcNext from '@trpc/server/adapters/next';
 import { createContext } from 'server/context';
 import { AppRouter, appRouter } from 'server/routers/_app';
+// import { generateOpenAPIDocumentFromTRPCRouter } from 'openapi-trpc';
+// import * as fs from 'fs';
 
+// export const doc = generateOpenAPIDocumentFromTRPCRouter(appRouter, {
+//   pathPrefix: '/trpc',
+// });
+// fs.mkdirSync('temp/examples', { recursive: true });
+// fs.writeFileSync('temp/examples/basic.json', JSON.stringify(doc));
 export default trpcNext.createNextApiHandler<AppRouter>({
   router: appRouter,
   /**
