@@ -49,7 +49,7 @@
     "@uiw/react-baidu-map": "^2.7.0",
     "@workos-inc/node": "^4.0.0",
     "apexcharts": "^3.45.1",
-    "clsx": "^2.0.0",
+    "clsx": "^2.1.1",
     "framer-motion": "^11.0.20",
     "jose": "^5.1.3",
     "moment": "^2.30.1",
